@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap");
+.room-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  overflow: hidden;
+  padding: 4px;
+  background-color: #0d0f0f;
+  border-radius: 5px;
+}
+.header {
+  text-align: center;
+
+  width: 90%;
+}
+
+.headerContainer {
+  display: flex;
+  border-bottom: 0.7px solid rgb(68, 68, 68);
+  width: 100%;
+  align-items: center;
+}
+.headerContainer button {
+  background-color: transparent;
+  color: rgb(125, 125, 125);
+  border: none;
+  height: 29px;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 60vh;
+  letter-spacing: 2px;
+  width: 95%;
+  color: aliceblue;
+  font-weight: 500;
+  font-family: "SUSE", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.room-list::-webkit-scrollbar {
+  width: 6px; /* Width of the scrollbar */
+}
+
+.room-list::-webkit-scrollbar-track {
+  background: transparent; /* Background of the scrollbar track */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.room-list::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 65, 65); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Change the color when hovered */
+.room-list::-webkit-scrollbar-thumb:hover {
+  background-color: ghostwhite; /* Darker color when hovered */
+}
+
+.room-item {
+  padding: 15px;
+  border-bottom: 0.7px solid rgb(68, 68, 68);
+
+  background: #0d0f0f;
+
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.room-item:hover {
+  background: #131313;
+}
+
+.create-room-form {
+  margin-top: 20px;
+}
+
+.create-room-form input {
+  padding: 10px;
+  margin: 0 5px;
+  outline: none;
+  border: none;
+}
+
+.create-room-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

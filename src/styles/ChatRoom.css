@@ -1,0 +1,185 @@
+@import url("https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap");
+
+.ChatRoom {
+  width: 350px;
+  background-color: #0d0f0f;
+  padding: 5px;
+  border-radius: 8px;
+  min-height: 450px;
+  font-family: "SUSE", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  position: relative;
+}
+
+.ChatRoom h2 {
+  margin: 0;
+}
+
+.OnlineStatus {
+  display: flex;
+  overflow-x: hidden;
+  padding: 10px;
+  width: 100%;
+  font-size: smaller;
+  height: 20px;
+}
+p {
+  margin: 0;
+}
+
+.MessageList {
+  min-height: 350px;
+  height: 70vh;
+  overflow-y: auto;
+  margin-bottom: 5px;
+  text-align: left;
+  position: relative;
+}
+
+/* For WebKit browsers (Chrome, Safari, etc.) */
+.MessageList::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+.MessageList::-webkit-scrollbar-track {
+  background: transparent; /* Background of the scrollbar track */
+  border-radius: 10px; /* Rounded corners */
+}
+.MessageList::-webkit-scrollbar-track:hover {
+  background: pink; /* Background of the scrollbar track */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.MessageList::-webkit-scrollbar-thumb {
+  background-color: rgb(71, 69, 69); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Change the color when hovered */
+.MessageList::-webkit-scrollbar-thumb:hover {
+  background-color: black; /* Darker color when hovered */
+}
+
+.MessageContainer {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.MessageItem {
+  margin-bottom: 2px;
+  max-width: 70%;
+  height: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  position: relative;
+  display: flex;
+  color: rgb(255, 255, 255);
+}
+.Avatar {
+  width: 30px;
+  background-color: transparent;
+}
+.Message {
+  width: auto;
+  background-color: #1f313b; /* Background color for the message bubble */
+  /* Limiting the width to prevent overflow */
+  margin: 0 8px; /* Margin around each message */
+  padding: 0 15px; /* Padding inside the message bubble */
+  border-radius: 8px 8px 8px 8px; /* Rounded corners for the message bubble */
+  position: relative; /* Positioning to allow pseudo-element manipulation */
+  color: #ffffff; /* Text color */
+  word-wrap: break-word; /* Break words to prevent overflow */
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+  /* Ensure no overflow of text */
+}
+.Message::before {
+  content: "";
+  position: absolute;
+  right: -8px; /* Position to the right edge */
+  width: 0;
+  height: 0;
+  border-width: 8px; /* Size of the triangle */
+  border-style: solid; /* Solid border */
+  border-color: #1f313b transparent transparent transparent; /* Colors for the triangle */
+}
+
+/* Styling for the messages on the left */
+.Message.left {
+  background-color: #151d21; /* Different color for received messages */
+  margin-left: 20px; /* Add margin to the left side */
+}
+
+.Message.left::before {
+  right: auto; /* Remove right alignment */
+  left: -8px; /* Align to the left */
+  border-color: #151d21 #151d21 transparent transparent; /* Color the left triangle */
+}
+.userName {
+  font-size: small;
+  font-weight: 600;
+}
+.userName p {
+  margin: 4px;
+  color: aquamarine;
+}
+.MessageBody {
+  font-size: 13px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 4px;
+  line-height: 1.5;
+  letter-spacing: 0.7px;
+  font-weight: 100;
+  width: 100%;
+}
+
+.InputContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.MessageInput {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+}
+
+.SendMessageButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.SendMessageButton:hover {
+  background-color: #0056b3;
+}
+
+.scroll-to-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 60px;
+  transform: translateX(300px);
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #421616;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.scroll-to-bottom:hover {
+  background-color: #0056b3;
+}
