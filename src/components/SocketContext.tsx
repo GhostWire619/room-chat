@@ -60,6 +60,8 @@ export const SocketProvider: React.FC<{
   useEffect(() => {
     // setSocket(newSocket);
     const setupSocketListeners = () => {
+      newSocket.off("receive_message");
+      newSocket.off("user_status");
       newSocket.on("receive_message", (data: Message) => {
         setChat((prevChat) => [...prevChat, data]);
         if (data.userName !== userName) {
