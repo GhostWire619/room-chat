@@ -86,7 +86,7 @@ export const SocketProvider: React.FC<{
     });
 
     newSocket.on("receive_message", (data: Message) => {
-      // setChat((prevChat) => [...prevChat, data]);
+      setChat((prevChat) => [...prevChat, data]);
       if (data.userName !== userName) {
         sendNotification("New Message", {
           body: `${data.userName}: ${data.text}`,
