@@ -59,12 +59,30 @@ export const SocketProvider: React.FC<{
 
   useEffect(() => {
     // setSocket(newSocket);
+    const setupSocketListeners = () => {
+      newSocket.on("receive_message", (data: Message) => {
+        setChat((prevChat) => [...prevChat, data]);
+        if (data.userName !== userName) {
+          sendNotification("New Message", {
+            body: `${data.userName}: ${data.text}`,
+          });
+        }
+      });
+
+      newSocket.on("user_status", (data: UserStatus) => {
+        setUsersOnline((prevUsers) => ({
+          ...prevUsers,
+          [data.userName]: data.status,
+        }));
+      });
+    };
 
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
       newSocket.emit("join", { userName, room });
       newSocket.emit("user_connected", { userName });
       setIsConnected(true);
+      setupSocketListeners();
     });
 
     requestNotificationPermission();
@@ -79,27 +97,13 @@ export const SocketProvider: React.FC<{
       newSocket.emit("join", { userName, room });
       newSocket.emit("user_connected", { userName });
       setIsConnected(true);
+      setupSocketListeners();
     });
 
     newSocket.on("reconnect_failed", () => {
       console.error("Reconnection failed after maximum attempts");
     });
-
-    newSocket.on("receive_message", (data: Message) => {
-      setChat((prevChat) => [...prevChat, data]);
-      if (data.userName !== userName) {
-        sendNotification("New Message", {
-          body: `${data.userName}: ${data.text}`,
-        });
-      }
-    });
-
-    newSocket.on("user_status", (data: UserStatus) => {
-      setUsersOnline((prevUsers) => ({
-        ...prevUsers,
-        [data.userName]: data.status,
-      }));
-    });
+    setupSocketListeners();
 
     return () => {
       newSocket.emit("leave", { userName, room });
