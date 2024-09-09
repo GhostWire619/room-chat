@@ -11,11 +11,11 @@ import { useSocket } from "./SocketContext"; // Import the useSocket hook
 interface ChatRoomProps {
   room: string;
 }
-interface Message {
-  id: number;
-  text: string;
-  userName: string;
-}
+// interface Message {
+//   id: number;
+//   text: string;
+//   userName: string;
+// }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
   const [message, setMessage] = useState<string>("");
