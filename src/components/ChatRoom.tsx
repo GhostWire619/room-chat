@@ -11,6 +11,11 @@ import { useSocket } from "./SocketContext"; // Import the useSocket hook
 interface ChatRoomProps {
   room: string;
 }
+interface Message {
+  id: number;
+  text: string;
+  userName: string;
+}
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
   const [message, setMessage] = useState<string>("");
@@ -21,8 +26,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
   const { removeCookie, cookies } = useAuth();
 
   // Get values from the SocketContext
-  const { chat, usersOnline, sendMessage, isConnected, loadMessages } =
-    useSocket();
+  const {
+    chat,
+    usersOnline,
+    sendMessage,
+    isConnected,
+    loadMessages,
+    socket,
+    setChat,
+    // userName,
+  } = useSocket();
 
   const scrollToBottom = () => {
     if (divRef.current) {
@@ -34,8 +47,18 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
   const chatContainer = chatContainerRef.current;
 
   useEffect(() => {
-    loadMessages(); // Scroll to bottom whenever chat updates
-  }, []);
+    loadMessages();
+    if (socket) {
+      socket.on("receive_message", (data: Message) => {
+        setChat((prevChat: Message[]) => [...prevChat, data]);
+        // if (data.userName !== userName) {
+        //   sendNotification("New Message", {
+        //     body: `${data.userName}: ${data.text}`,
+        //   });
+        // }
+      });
+    }
+  }, [socket]);
   useEffect(() => {
     scrollToBottom(); // Scroll to bottom whenever chat updates
   }, [chat]);

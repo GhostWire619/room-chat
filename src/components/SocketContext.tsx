@@ -9,6 +9,8 @@ interface SocketContextProps {
   isConnected: boolean;
   usersOnline: { [key: string]: string };
   chat: Message[];
+  userName: string;
+  setChat: (chat: any) => void;
   sendMessage: (message: string) => void;
   loadMessages: () => void;
 }
@@ -85,7 +87,7 @@ export const SocketProvider: React.FC<{
     });
 
     newSocket.on("receive_message", (data: Message) => {
-      setChat((prevChat) => [...prevChat, data]);
+      // setChat((prevChat) => [...prevChat, data]);
       if (data.userName !== userName) {
         sendNotification("New Message", {
           body: `${data.userName}: ${data.text}`,
@@ -132,6 +134,8 @@ export const SocketProvider: React.FC<{
         isConnected,
         usersOnline,
         chat,
+        userName,
+        setChat,
         sendMessage,
         loadMessages,
       }}
