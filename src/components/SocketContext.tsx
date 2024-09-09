@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 
 // Define the shape of the context
 interface SocketContextProps {
-  socket: Socket | null;
+  newSocket: Socket | null;
   isConnected: boolean;
   usersOnline: { [key: string]: string };
   chat: Message[];
@@ -40,26 +40,25 @@ export const SocketProvider: React.FC<{
   room: string;
   children: React.ReactNode;
 }> = ({ userName, room, children }) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  // const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [chat, setChat] = useState<Message[]>([]);
   const [room_id, setRoom_id] = useState<string>("");
   const { sendNotification, requestNotificationPermission, API_URL } =
     useAuth();
+  const newSocket: Socket = io(`${API_URL}`, {
+    reconnectionAttempts: 5,
+    timeout: 10000,
+    reconnectionDelay: 2000,
+    transports: ["websocket"], // Add this line to force WebSocket transport
+    extraHeaders: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 
   useEffect(() => {
-    const newSocket: Socket = io(`${API_URL}`, {
-      reconnectionAttempts: 5,
-      timeout: 10000,
-      reconnectionDelay: 2000,
-      transports: ["websocket"], // Add this line to force WebSocket transport
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-
-    setSocket(newSocket);
+    // setSocket(newSocket);
 
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
@@ -122,15 +121,16 @@ export const SocketProvider: React.FC<{
   };
 
   const sendMessage = (message: string) => {
-    if (socket && message.trim()) {
-      socket.emit("send_message", { userName, message, room_id, room });
+    message = message.trim();
+    if (message) {
+      newSocket.emit("send_message", { userName, message, room_id, room });
     }
   };
 
   return (
     <SocketContext.Provider
       value={{
-        socket,
+        newSocket,
         isConnected,
         usersOnline,
         chat,

@@ -32,7 +32,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
     sendMessage,
     isConnected,
     loadMessages,
-    socket,
+    newSocket,
     setChat,
     // userName,
   } = useSocket();
@@ -48,8 +48,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
 
   useEffect(() => {
     loadMessages();
-    if (socket) {
-      socket.on("receive_message", (data: Message) => {
+    if (newSocket) {
+      newSocket.on("receive_message", (data: Message) => {
         setChat((prevChat: Message[]) => [...prevChat, data]);
         // if (data.userName !== userName) {
         //   sendNotification("New Message", {
@@ -58,7 +58,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
         // }
       });
     }
-  }, [socket]);
+  }, []);
+
   useEffect(() => {
     scrollToBottom(); // Scroll to bottom whenever chat updates
   }, [chat]);
