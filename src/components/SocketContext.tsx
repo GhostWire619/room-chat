@@ -1,30 +1,36 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import io, { Socket } from "socket.io-client";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 
-// Define the shape of the context
 interface SocketContextProps {
-  newSocket: Socket | null;
+  socket: Socket | null;
   isConnected: boolean;
   usersOnline: { [key: string]: string };
   chat: Message[];
   userName: string;
-  setChat: (chat: any) => void;
+  setChat: (chat: Message[]) => void;
   sendMessage: (message: string) => void;
   loadMessages: () => void;
 }
+
 interface Message {
   id: number;
   text: string;
   userName: string;
 }
+
 interface UserStatus {
   userName: string;
   status: string;
 }
 
-// Create the context with default values
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
 export const useSocket = () => {
@@ -40,29 +46,30 @@ export const SocketProvider: React.FC<{
   room: string;
   children: React.ReactNode;
 }> = ({ userName, room, children }) => {
-  // const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [chat, setChat] = useState<Message[]>([]);
-  const [room_id, setRoom_id] = useState<string>("");
+  const [roomId, setRoomId] = useState<string>("");
   const { sendNotification, requestNotificationPermission, API_URL } =
     useAuth();
-  const newSocket: Socket = io(`${API_URL}`, {
-    reconnectionAttempts: 5,
-    timeout: 10000,
-    reconnectionDelay: 2000,
-    transports: ["websocket"], // Add this line to force WebSocket transport
-    extraHeaders: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // setSocket(newSocket);
+    socketRef.current = io(`${API_URL}`, {
+      reconnectionAttempts: 5,
+      timeout: 10000,
+      reconnectionDelay: 2000,
+      transports: ["websocket"],
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+
+    const socket = socketRef.current;
+
     const setupSocketListeners = () => {
-      newSocket.off("receive_message");
-      newSocket.off("user_status");
-      newSocket.on("receive_message", (data: Message) => {
+      socket.on("receive_message", (data: Message) => {
         setChat((prevChat) => [...prevChat, data]);
         if (data.userName !== userName) {
           sendNotification("New Message", {
@@ -71,47 +78,52 @@ export const SocketProvider: React.FC<{
         }
       });
 
-      newSocket.on("user_status", (data: UserStatus) => {
+      socket.on("user_status", (data: UserStatus) => {
         setUsersOnline((prevUsers) => ({
           ...prevUsers,
           [data.userName]: data.status,
         }));
       });
+
+      socket.on("connect", () => {
+        console.log("Connected to socket server");
+        socket.emit("join", { userName, room });
+        socket.emit("user_connected", { userName });
+        setIsConnected(true);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Disconnected from socket server");
+        setIsConnected(false);
+      });
+
+      socket.on("reconnect", (attemptNumber) => {
+        console.log(`Reconnected after ${attemptNumber} attempts`);
+        socket.emit("join", { userName, room });
+        socket.emit("user_connected", { userName });
+        setIsConnected(true);
+      });
+
+      socket.on("reconnect_failed", () => {
+        console.error("Reconnection failed after maximum attempts");
+      });
     };
 
-    newSocket.on("connect", () => {
-      console.log("Connected to socket server");
-      newSocket.emit("join", { userName, room });
-      newSocket.emit("user_connected", { userName });
-      setIsConnected(true);
-      setupSocketListeners();
-    });
+    setupSocketListeners();
 
     requestNotificationPermission();
 
-    newSocket.on("disconnect", () => {
-      console.log("Disconnected from socket server");
-      setIsConnected(false);
-    });
-
-    newSocket.on("reconnect", (attemptNumber) => {
-      console.log(`Reconnected after ${attemptNumber} attempts`);
-      newSocket.emit("join", { userName, room });
-      newSocket.emit("user_connected", { userName });
-      setIsConnected(true);
-      setupSocketListeners();
-    });
-
-    newSocket.on("reconnect_failed", () => {
-      console.error("Reconnection failed after maximum attempts");
-    });
-    setupSocketListeners();
-
     return () => {
-      newSocket.emit("leave", { userName, room });
-      newSocket.disconnect();
+      socket.emit("leave", { userName, room });
+      socket.disconnect();
     };
-  }, [userName]);
+  }, [
+    API_URL,
+    userName,
+    room,
+    sendNotification,
+    requestNotificationPermission,
+  ]);
 
   const loadMessages = async () => {
     try {
@@ -120,23 +132,27 @@ export const SocketProvider: React.FC<{
       });
       const { messages, id } = response.data;
       setChat(messages);
-      setRoom_id(id);
+      setRoomId(id);
     } catch (error) {
       console.error("Error loading messages:", error);
     }
   };
 
   const sendMessage = (message: string) => {
-    message = message.trim();
-    if (message) {
-      newSocket.emit("send_message", { userName, message, room_id, room });
+    if (message.trim() && socketRef.current) {
+      socketRef.current.emit("send_message", {
+        userName,
+        message,
+        roomId,
+        room,
+      });
     }
   };
 
   return (
     <SocketContext.Provider
       value={{
-        newSocket,
+        socket: socketRef.current,
         isConnected,
         usersOnline,
         chat,
