@@ -32,8 +32,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
     sendMessage,
     isConnected,
     loadMessages,
-    newSocket,
-    setChat,
+    // newSocket,
+    // setChat,
     // userName,
   } = useSocket();
 
@@ -48,16 +48,16 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
 
   useEffect(() => {
     loadMessages();
-    if (newSocket) {
-      newSocket.on("receive_message", (data: Message) => {
-        setChat((prevChat: Message[]) => [...prevChat, data]);
-        // if (data.userName !== userName) {
-        //   sendNotification("New Message", {
-        //     body: `${data.userName}: ${data.text}`,
-        //   });
-        // }
-      });
-    }
+    // if (newSocket) {
+    //   newSocket.on("receive_message", (data: Message) => {
+    //     setChat((prevChat: Message[]) => [...prevChat, data]);
+    //     // if (data.userName !== userName) {
+    //     //   sendNotification("New Message", {
+    //     //     body: `${data.userName}: ${data.text}`,
+    //     //   });
+    //     // }
+    //   });
+    // }
   }, []);
 
   useEffect(() => {
