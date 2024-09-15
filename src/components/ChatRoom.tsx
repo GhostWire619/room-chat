@@ -126,6 +126,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
     }
   };
 
+  useEffect(() => {
+    scrollToBottom(); // Scroll to bottom whenever chat updates
+  }, [chat]);
+
   const handleScroll = () => {
     if (chatContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
