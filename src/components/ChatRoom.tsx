@@ -69,7 +69,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room }) => {
 
       socket.on("connect", () => {
         console.log("Connected to socket server");
-        socket.emit("join", { userName: cookies.userData.userName, room });
+        socket.emit("join", { userName: cookies.userData.userName, room: "qq" });
         socket.emit("user_connected", { userName: cookies.userData.userName });
         setIsConnected(true);
       });
