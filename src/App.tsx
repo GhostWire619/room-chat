@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useAuth } from "./components/AuthContext";
 import RoomDashboard from "./components/RoomDashboard";
 import LoginPage from "./components/Login";
@@ -7,7 +7,11 @@ import { SocketProvider } from "./components/SocketContext";
 
 const App: React.FC = () => {
   const { cookies } = useAuth();
-
+  const [room,setRoom] = useState("")
+  
+  useEffect(()=>{
+    setRoom(cookies.roomTitle)
+  },[cookies.roomTitle])
   if (!cookies.userData) {
     return <LoginPage />;
   }
@@ -15,7 +19,7 @@ const App: React.FC = () => {
   return (
     <SocketProvider
       userName={cookies.userData.userName}
-      room={cookies.roomTitle}
+      room={room}
     >
       <div className="App">
         <RoomDashboard />
