@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-const API_URL = "https://195-238-123-140.cloud-xip.com:8000"    // "https://sock-back.onrender.com"  //"https://room-connect-8cf76c932125.herokuapp.com"; //import.meta.env.VITE_REACT_APP_API_URL; //|| "http://127.0.0.1:5000"
+const API_URL = "https://195-238-123-140.cloud-xip.com:443"    // "https://sock-back.onrender.com"  //"https://room-connect-8cf76c932125.herokuapp.com"; //import.meta.env.VITE_REACT_APP_API_URL; //|| "http://127.0.0.1:5000"
 
 // Define the user data type
 interface UserData {
@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const login = async (userName: string, password: string) => {
     try {
       const response = await axios.post(
-        `https://195-238-123-140.cloud-xip.com:8000/auth/login`,
+        `https://195-238-123-140.cloud-xip.com:443/auth/login`,
         {
           userName,
           password,
