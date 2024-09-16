@@ -5,7 +5,7 @@
   background-color: #0d0f0f;
 
   margin: 0;
-  height: 95vh;
+  height: 90vh;
   font-family: "SUSE", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
@@ -35,7 +35,7 @@ p {
 
 .MessageList {
   min-height: 350px;
-  height: 78vh;
+  height: 70vh;
   max-width: 69vw;
   overflow-y: auto;
   margin-bottom: 5px;
