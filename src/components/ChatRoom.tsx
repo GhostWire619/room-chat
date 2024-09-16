@@ -20,28 +20,23 @@ interface Message {
   userName: string;
 }
 
-interface UserStatus {
-  userName: string;
-  status: string;
-}
+// interface UserStatus {
+//   userName: string;
+//   status: string;
+// }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
   const [message, setMessage] = useState<string>("");
   const [chat, setChat] = useState<Message[]>([]);
-  const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
+  // const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
-  const {
-    removeCookie,
-    cookies,
-    sendNotification,
-    requestNotificationPermission,
-    API_URL,
-  } = useAuth();
+  const { cookies, sendNotification, requestNotificationPermission, API_URL } =
+    useAuth();
 
   useEffect(() => {
     // Load messages on mount
@@ -88,12 +83,12 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
     // Setup socket listeners
     const setupSocketListeners = () => {
-      socket.on("user_status", (data: UserStatus) => {
-        setUsersOnline((prevUsers) => ({
-          ...prevUsers,
-          [data.userName]: data.status,
-        }));
-      });
+      // socket.on("user_status", (data: UserStatus) => {
+      //   // setUsersOnline((prevUsers) => ({
+      //   //   ...prevUsers,
+      //   //   [data.userName]: data.status,
+      //   // }));
+      // });
 
       socket.on("connect", () => {
         console.log("Connected to socket server");
