@@ -30,6 +30,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
   const [chat, setChat] = useState<Message[]>([]);
   // const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [prevRoom, setPrevRoom] = useState("");
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -49,6 +50,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           });
           const { messages } = response.data;
           setChat(messages);
+          setPrevRoom(cookies.roomTitle);
           setupSocketListeners();
         } catch (error) {
           console.error("Error loading messages:", error);
@@ -89,6 +91,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
       //   //   [data.userName]: data.status,
       //   // }));
       // });
+
+      socket.on("receive_message", (data: Message) => {
+        setChat((prevChat) => [...prevChat, data]);
+        if (data.userName !== cookies.userData.userName) {
+          sendNotification("New Message", {
+            body: `${data.userName}: ${data.text}`,
+          });
+        }
+      });
 
       socket.on("connect", () => {
         console.log("Connected to socket server");
@@ -172,10 +183,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
   const setupSocketListeners = () => {
     if (socketRef.current) {
-      socketRef.current.emit("join", {
-        userName: cookies.userData.userName,
-        room: cookies.roomTitle,
-      });
       socketRef.current.on("receive_message", (data: Message) => {
         setChat((prevChat) => [...prevChat, data]);
         if (data.userName !== cookies.userData.userName) {
@@ -184,12 +191,27 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           });
         }
       });
+
+      socketRef.current.emit("join", {
+        userName: cookies.userData.userName,
+        room: cookies.roomTitle,
+      });
+      console.log("joind room" + cookies.roomTitle);
     }
   };
   const disconnectReceiveMessage = () => {
     if (socketRef.current) {
       // Remove the event listener for "receive_message"
       socketRef.current.off("receive_message");
+
+      if (prevRoom) {
+        socketRef.current.emit("leave", {
+          userName: cookies.userData.userName,
+          room: prevRoom,
+        });
+        console.log("lft room" + prevRoom);
+      }
+
       console.log("Stopped receiving messages.");
     }
   };

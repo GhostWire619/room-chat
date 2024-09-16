@@ -36,7 +36,7 @@ const RoomDashboard: React.FC<Props> = ({ toggleChatRoom }) => {
 
     try {
       await axios.post(`${API_URL}/auth/register/room`, {
-        title: newRoomTitle,
+        title: newRoomTitle.trim().toLowerCase(),
         user_id: cookies.id,
       });
       setNewRoomTitle("");
@@ -54,7 +54,7 @@ const RoomDashboard: React.FC<Props> = ({ toggleChatRoom }) => {
 
     try {
       await axios.post(`${API_URL}/auth/login/room`, {
-        title: newRoomTitle,
+        title: newRoomTitle.trim().toLowerCase(),
       });
       setNewRoomTitle("");
       setCookie("roomTitle", newRoomTitle, { path: "/" });
