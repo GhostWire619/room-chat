@@ -1,4 +1,5 @@
-body {
+body,
+html {
   font-family: Arial, sans-serif;
   background-color: #0d0f0f;
   margin: 0;
@@ -23,6 +24,7 @@ body {
 .App {
   height: 100vh;
   display: flex;
+  overflow: hidden;
 }
 
 input {
@@ -46,9 +48,9 @@ input {
 
 .room-dashboard {
   /* Adjust according to your design */
-  transition: width 0.3s ease-in-out;
+  transition: width 0.1s ease-in-out;
 }
 
 .ChatRoom {
-  transition: display 0.3s ease-in-out;
+  transition: display 0.1s ease-in-out;
 }

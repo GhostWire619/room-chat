@@ -15,6 +15,7 @@
   justify-self: flex-end;
   align-self: flex-end;
   border: 0.7px solid rgb(68, 68, 68);
+  overflow: hidden;
 }
 
 .ChatRoom h2 {
