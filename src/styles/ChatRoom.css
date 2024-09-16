@@ -35,7 +35,7 @@ p {
 
 .MessageList {
   min-height: 350px;
-  height: 70vh;
+  height: 75%;
   max-width: 69vw;
   overflow-y: auto;
   margin-bottom: 5px;
