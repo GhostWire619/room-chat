@@ -18,7 +18,7 @@ const App: React.FC = () => {
       handleResize();
       return () => window.removeEventListener("resize", handleResize);
     }
-  }, [isChatRoomVisible]);
+  }, [isChatRoomVisible, cookies.userData]);
 
   if (!cookies.userData) {
     return <LoginPage />;

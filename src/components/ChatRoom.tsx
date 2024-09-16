@@ -205,6 +205,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           style={{
             display: "flex",
             alignItems: "center",
+            height: "68px",
           }}
         >
           <IconButton

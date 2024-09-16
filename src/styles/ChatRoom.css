@@ -3,40 +3,39 @@
 .ChatRoom {
   width: 70vw;
   background-color: #0d0f0f;
-  padding: 5px 10px 5px 0px;
+
   margin: 0;
-  height: 100%;
+  height: 90vh;
   font-family: "SUSE", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-self: flex-end;
-  align-self: flex-end;
-  border: 0.7px solid rgb(68, 68, 68);
-  overflow: hidden;
+
+  border: 1px solid rgb(68, 68, 68);
+  border-top: 1px solid rgb(68, 68, 68);
 }
 
 .ChatRoom h2 {
   margin: 0;
 }
 
-.OnlineStatus {
+/* .OnlineStatus {
   display: flex;
   overflow-x: hidden;
   padding: 10px;
   width: 100%;
   font-size: smaller;
   height: 20px;
-}
+} */
 p {
   margin: 0;
 }
 
 .MessageList {
   min-height: 350px;
-  height: 75vh;
+  height: 65vh;
   max-width: 69vw;
   overflow-y: auto;
   margin-bottom: 5px;
