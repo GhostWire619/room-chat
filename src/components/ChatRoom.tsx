@@ -42,6 +42,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
   useEffect(() => {
     // Load messages on mount
     disconnectReceiveMessage();
+    disconnectReceiveMessage();
+    disconnectReceiveMessage();
+    disconnectReceiveMessage();
     const loadMessages = async () => {
       if (cookies.roomTitle) {
         try {
@@ -67,7 +70,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           room,
         });
     };
-  }, [API_URL, room]);
+  }, [room]);
 
   useEffect(() => {
     // Initialize socket connection
