@@ -1,15 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap");
 
 .ChatRoom {
-  width: 350px;
+  width: 70vw;
   background-color: #0d0f0f;
-  padding: 5px;
-  border-radius: 8px;
-  min-height: 450px;
+  padding: 5px 10px 5px 0px;
+  margin: 0;
+  height: 100%;
   font-family: "SUSE", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-self: flex-end;
+  align-self: flex-end;
+  border: 0.7px solid rgb(68, 68, 68);
 }
 
 .ChatRoom h2 {
@@ -30,7 +35,8 @@ p {
 
 .MessageList {
   min-height: 350px;
-  height: 70vh;
+  height: 75vh;
+  max-width: 69vw;
   overflow-y: auto;
   margin-bottom: 5px;
   text-align: left;
@@ -140,12 +146,14 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 68vw;
 }
 
 .MessageInput {
   flex: 1;
   padding: 10px;
   margin-right: 10px;
+  margin-left: 10px;
   border: none;
   border-radius: 4px;
   outline: none;

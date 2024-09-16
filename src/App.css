@@ -1,11 +1,9 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #8a0707;
+  background-color: #0d0f0f;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
   height: 100vh;
   color: rgb(214, 176, 214);
   width: 100%;
@@ -16,12 +14,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 .App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  display: flex;
 }
 
 input {
@@ -31,4 +28,23 @@ input {
   outline: none;
   background-color: rgb(28, 27, 27);
   color: aliceblue;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px;
+  text-align: center;
+  display: none;
+}
+
+.room-dashboard {
+  /* Adjust according to your design */
+  transition: width 0.3s ease-in-out;
+}
+
+.ChatRoom {
+  transition: display 0.3s ease-in-out;
 }

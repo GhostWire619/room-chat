@@ -3,11 +3,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
+  width: 30vw;
   overflow: hidden;
-  padding: 4px;
+
   background-color: #0d0f0f;
-  border-radius: 5px;
 }
 .header {
   text-align: center;
@@ -17,9 +16,10 @@
 
 .headerContainer {
   display: flex;
-  border-bottom: 0.7px solid rgb(68, 68, 68);
+  border-bottom: 1px solid rgb(68, 68, 68);
   width: 100%;
   align-items: center;
+  padding-bottom: 7.5px;
 }
 .headerContainer button {
   background-color: transparent;
@@ -33,11 +33,10 @@
 .room-list {
   display: flex;
   flex-direction: column;
-  padding: 10px;
   overflow-y: auto;
-  max-height: 60vh;
+  height: 70vh;
   letter-spacing: 2px;
-  width: 95%;
+  width: 100%;
   color: aliceblue;
   font-weight: 500;
   font-family: "SUSE", sans-serif;
@@ -64,34 +63,48 @@
 }
 
 .room-item {
-  padding: 15px;
+  height: 40px;
   border-bottom: 0.7px solid rgb(68, 68, 68);
-
+  align-items: center;
+  display: flex;
+  width: 100%;
   background: #0d0f0f;
 
   cursor: pointer;
   flex: 0 0 auto;
+}
+.room-item p {
+  margin-left: 10px;
 }
 .room-item:hover {
   background: #131313;
 }
 
 .create-room-form {
-  margin-top: 20px;
+  margin: 0;
 }
 
 .create-room-form input {
   padding: 10px;
-  margin: 0 5px;
   outline: none;
   border: none;
+  width: 65%;
+  margin-right: 5px;
 }
 
 .create-room-form button {
-  padding: 10px;
+  padding: 5px;
+  margin: 0;
   background-color: #007bff;
   color: rgb(255, 255, 255);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width: 20%;
+}
+
+p,
+a {
+  padding: 0;
+  margin: 0;
 }

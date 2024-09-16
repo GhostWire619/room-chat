@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-const API_URL = "https://195-238-123-140.cloud-xip.com:443";    // "https://sock-back.onrender.com"  //"https://room-connect-8cf76c932125.herokuapp.com"; //import.meta.env.VITE_REACT_APP_API_URL; //|| "http://127.0.0.1:5000"
+const API_URL = "https://195-238-123-140.cloud-xip.com:443"; // "https://sock-back.onrender.com"  //"https://room-connect-8cf76c932125.herokuapp.com"; //import.meta.env.VITE_REACT_APP_API_URL; //|| "http://127.0.0.1:5000"
 
 // Define the user data type
 interface UserData {
@@ -68,22 +68,75 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUser(null);
     removeCookie("id", { path: "/" });
     removeCookie("userData", { path: "/" });
+    removeCookie("roomTitle", { path: "/" });
     console.log("Logged out successfully");
   };
 
-  function requestNotificationPermission() {
+  // In your main file (e.g., index.tsx or App.tsx)
+  // serviceWorkerRegistration.ts
+
+  const registerServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+      try {
+        // const registration =
+        await navigator.serviceWorker.register("/sw.js");
+        // console.log("Service Worker registered:", registration);
+
+        // Call subscribeUserToPush after successful registration
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
+      }
+    }
+  };
+
+  registerServiceWorker();
+
+  async function requestNotificationPermission() {
     if ("Notification" in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          console.log("Notification permission granted.");
-        } else {
-          console.log("Notification permission denied.");
-        }
-      });
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        console.log("Notification permission granted.");
+      } else {
+        console.log("Notification permission denied.");
+      }
     } else {
       console.log("This browser does not support notifications.");
     }
   }
+
+  // async function subscribeUserToPush() {
+  //   const registration = await navigator.serviceWorker.ready;
+
+  //   const subscribeOptions = {
+  //     userVisibleOnly: true,
+  //     applicationServerKey: urlBase64ToUint8Array(
+  //       "BOeEhoxo2390ZlmUwPmCiUIF3yo9EDCeIiyKOr0nP-c6zJL24akb1KPw97xxkHQx99Cb1K8fwTkA6kbAYp9JouE"
+  //     ), // Replace with your public key
+  //   };
+
+  //   const pushSubscription = await registration.pushManager.subscribe(
+  //     subscribeOptions
+  //   );
+  //   console.log("Received PushSubscription:", JSON.stringify(pushSubscription));
+
+  //   // Send the subscription to your backend to store
+  // }
+
+  // function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  //   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  //   const base64 = (base64String + padding)
+  //     .replace(/-/g, "+")
+  //     .replace(/_/g, "/");
+
+  //   const rawData = window.atob(base64);
+  //   const outputArray = new Uint8Array(rawData.length);
+
+  //   for (let i = 0; i < rawData.length; ++i) {
+  //     outputArray[i] = rawData.charCodeAt(i);
+  //   }
+  //   return outputArray;
+  // }
+
   function sendNotification(title: string, options?: NotificationOptions) {
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification(title, options);

@@ -18,6 +18,7 @@ const Register: React.FC<Prop> = ({ setisRegisterd }) => {
     e.preventDefault();
 
     try {
+      setError("loading...");
       const response = await axios.post(`${API_URL}/auth/register`, {
         userName,
         password,
@@ -27,6 +28,7 @@ const Register: React.FC<Prop> = ({ setisRegisterd }) => {
       setUserName("");
       setPassword("");
       setisRegisterd(true);
+      alert("success");
     } catch (err: any) {
       setError(err.response?.data?.msg || "Registration failed.");
       setSuccess("");

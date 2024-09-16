@@ -13,7 +13,9 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setError("loading...");
       await login(userName, password);
+
       setError("");
     } catch (err: any) {
       setError("Invalid username or password");
@@ -33,6 +35,7 @@ const LoginPage: React.FC = () => {
         backgroundColor: "#0d0f0f",
         borderRadius: "8px",
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        maxHeight: "400px",
       }}
     >
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Login</h2>
