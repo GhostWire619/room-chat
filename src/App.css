@@ -7,6 +7,10 @@ body {
   height: 100vh;
   color: rgb(214, 176, 214);
   width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #root {
   width: 100vw;
