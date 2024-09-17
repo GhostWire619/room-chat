@@ -195,7 +195,7 @@ p {
 @media (max-width: 560px) {
   .ChatRoom {
     width: 70vw;
-    height: 100vh;
+    height: 100%;
     flex: 1 0 auto;
   }
   .MessageList {

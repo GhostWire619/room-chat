@@ -9,24 +9,17 @@ html {
   color: rgb(214, 176, 214);
   width: 100%;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 #root {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
   overflow: hidden;
 }
 .App {
   height: 100vh;
-  display: flex;
   overflow: hidden;
-  justify-content: center;
-  align-items: center;
+  display: flex;
 }
 
 input {
