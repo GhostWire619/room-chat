@@ -60,10 +60,7 @@ const App: React.FC = () => {
     <>
       <div className="App">
         <RoomDashboard toggleChatRoom={toggleChatRoom} />
-        <ChatRoom
-          room={cookies.roomTitle}
-          setIsChatRoomVisible={setIsChatRoomVisible}
-        />
+        <ChatRoom setIsChatRoomVisible={setIsChatRoomVisible} />
       </div>
     </>
   );

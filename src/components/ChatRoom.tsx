@@ -10,7 +10,6 @@ import io, { Socket } from "socket.io-client";
 import axios from "axios";
 
 interface ChatRoomProps {
-  room: string;
   setIsChatRoomVisible: (value: boolean) => void;
 }
 
@@ -25,12 +24,12 @@ interface Message {
 //   status: string;
 // }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
   const [message, setMessage] = useState<string>("");
   const [chat, setChat] = useState<Message[]>([]);
   // const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [prevRoom, setPrevRoom] = useState("");
+  // const [prevRoom, setPrevRoom] = useState("");
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -41,16 +40,17 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
   useEffect(() => {
     // Load messages on mount
-    disconnectReceiveMessage();
+
     const loadMessages = async () => {
       if (cookies.roomTitle) {
+        // disconnectReceiveMessage();
         try {
           const response = await axios.post(`${API_URL}/auth/login/room`, {
-            title: room,
+            title: cookies.roomTitle,
           });
           const { messages } = response.data;
           setChat(messages);
-          setPrevRoom(cookies.roomTitle);
+          // setPrevRoom(cookies.roomTitle);
           setupSocketListeners();
         } catch (error) {
           console.error("Error loading messages:", error);
@@ -58,7 +58,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
       }
     };
     loadMessages();
-  }, [room]);
+  }, [cookies.roomTitle]);
 
   useEffect(() => {
     // Initialize socket connection
@@ -85,6 +85,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
       socket.on("receive_message", (data: Message) => {
         setChat((prevChat) => [...prevChat, data]);
+        console.log("rcvd a mssg from " + data.userName);
         if (data.userName !== cookies.userData.userName) {
           sendNotification("New Message", {
             body: `${data.userName}: ${data.text}`,
@@ -105,8 +106,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
       socket.on("reconnect", (attemptNumber) => {
         console.log(`Reconnected after ${attemptNumber} attempts`);
-        socket.emit("join", { userName: cookies.userData.userName, room });
-        socket.emit("user_connected", { userName: cookies.userData.userName });
         setIsConnected(true);
       });
 
@@ -119,7 +118,10 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
     requestNotificationPermission();
 
     return () => {
-      socket.emit("leave", { userName: cookies.userData.userName, room });
+      socket.emit("leave", {
+        userName: cookies.userData.userName,
+        room: cookies.roomTitle,
+      });
       socket.disconnect();
     };
   }, []);
@@ -166,7 +168,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
       socketRef.current.emit("send_message", {
         userName: cookies.userData.userName,
         message,
-        room,
+        room: cookies.roomTitle,
       });
       setMessage("");
     }
@@ -190,22 +192,22 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
       console.log("joind room" + cookies.roomTitle);
     }
   };
-  const disconnectReceiveMessage = () => {
-    if (socketRef.current) {
-      // Remove the event listener for "receive_message"
-      // socketRef.current.off("receive_message");
+  // const disconnectReceiveMessage = () => {
+  //   if (socketRef.current) {
+  //     // Remove the event listener for "receive_message"
+  //     // socketRef.current.off("receive_message");
 
-      if (prevRoom) {
-        socketRef.current.emit("leave", {
-          userName: cookies.userData.userName,
-          room: prevRoom,
-        });
-        console.log("lft room" + prevRoom);
-      }
+  //     if (prevRoom) {
+  //       socketRef.current.emit("leave", {
+  //         userName: cookies.userData.userName,
+  //         room: prevRoom,
+  //       });
+  //       console.log("lft room" + prevRoom);
+  //     }
 
-      console.log("Stopped receiving messages.");
-    }
-  };
+  //     console.log("Stopped receiving messages.");
+  //   }
+  // };
 
   return (
     <div className="ChatRoom">
@@ -230,7 +232,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           >
             <ArrowBackIcon />
           </IconButton>
-          <h2>Chat Room: {room}</h2>
+          <h2>Chat Room: {cookies.roomTitle}</h2>
         </div>
 
         <div className="OnlineStatus">
