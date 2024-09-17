@@ -192,7 +192,7 @@ p {
   background-color: #0056b3;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 480px) {
   .ChatRoom {
     width: 70vw;
     height: 100%;
