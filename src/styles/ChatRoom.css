@@ -222,10 +222,4 @@ p {
     min-height: 150px;
     height: 30vh;
   }
-  .room-dashboard {
-    height: 50vh;
-  }
-  .ChatRoom {
-    height: 50vh;
-  }
 }
