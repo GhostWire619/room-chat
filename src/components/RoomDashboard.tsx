@@ -116,7 +116,6 @@ const RoomDashboard: React.FC<Props> = ({ toggleChatRoom }) => {
             <p style={{ marginTop: "5px", textAlign: "center" }}>
               to create New room{" "}
               <a
-                href="#"
                 onClick={() => setIsJoin(false)}
                 style={{ color: "#007BFF", textDecoration: "none" }}
               >
@@ -151,7 +150,6 @@ const RoomDashboard: React.FC<Props> = ({ toggleChatRoom }) => {
             <p style={{ marginTop: "5px", textAlign: "center" }}>
               to join existing room{" "}
               <a
-                href="#"
                 onClick={() => setIsJoin(true)}
                 style={{ color: "#007BFF", textDecoration: "none" }}
               >
