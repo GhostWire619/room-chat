@@ -212,33 +212,34 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
   // };
 
   return (
-    <div className="ChatRoom">
-      <div
-        style={{
-          borderBottom: "1px solid rgb(68, 68, 68)",
-        }}
-      >
+    <div>
+      <div className="ChatRoom">
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            height: "68px",
+            borderBottom: "1px solid rgb(68, 68, 68)",
           }}
         >
-          <IconButton
-            onClick={() => {
-              // setChat([]);
-              setIsChatRoomVisible(false);
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: "68px",
             }}
-            sx={{ color: "purple" }}
           >
-            <ArrowBackIcon />
-          </IconButton>
-          <h2>Chat Room: {cookies.roomTitle}</h2>
-        </div>
+            <IconButton
+              onClick={() => {
+                // setChat([]);
+                setIsChatRoomVisible(false);
+              }}
+              sx={{ color: "purple" }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <h2>Chat Room: {cookies.roomTitle}</h2>
+          </div>
 
-        <div className="OnlineStatus">
-          {/* {Object.keys(usersOnline).map((user, index) => (
+          <div className="OnlineStatus">
+            {/* {Object.keys(usersOnline).map((user, index) => (
           <div key={index}>
             <p style={{ marginLeft: "10px" }}>
               {user}
@@ -246,91 +247,93 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
             </p>
           </div>
         ))} */}
+          </div>
         </div>
-      </div>
-      <div
-        className="MessageList"
-        style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat", // Ensure no repeat of the image
-          backgroundPosition: "center", // Center the image
-        }}
-        ref={chatContainerRef}
-      >
-        {chat.map((chatMessage) => (
-          <div
-            key={chatMessage.id ? chatMessage.id : chatMessage.text}
-            className="MessageContainer"
-            style={{
-              display: "flex",
-              justifyContent:
-                chatMessage.userName !== cookies.userData.userName
-                  ? "flex-start"
-                  : "right",
-            }}
-          >
-            <div className="MessageItem">
-              <div
-                className="Avatar"
-                style={{
-                  display:
-                    chatMessage.userName !== cookies.userData.userName
-                      ? "block"
-                      : "none",
-                }}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: "#3f51b5",
-                    width: "30px",
-                    height: "30px",
+        <div
+          className="MessageList"
+          style={{
+            backgroundImage: `url(${bg})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat", // Ensure no repeat of the image
+            backgroundPosition: "center", // Center the image
+          }}
+          ref={chatContainerRef}
+        >
+          {chat.map((chatMessage) => (
+            <div
+              key={chatMessage.id ? chatMessage.id : chatMessage.text}
+              className="MessageContainer"
+              style={{
+                display: "flex",
+                justifyContent:
+                  chatMessage.userName !== cookies.userData.userName
+                    ? "flex-start"
+                    : "right",
+              }}
+            >
+              <div className="MessageItem">
+                <div
+                  className="Avatar"
+                  style={{
+                    display:
+                      chatMessage.userName !== cookies.userData.userName
+                        ? "block"
+                        : "none",
                   }}
                 >
-                  {chatMessage.userName.charAt(0).toUpperCase()}
-                </Avatar>
-              </div>
-              <div
-                className={`Message ${
-                  chatMessage.userName !== cookies.userData.userName
-                    ? " left"
-                    : ""
-                }`}
-              >
-                <div className="userName">
-                  <p>
-                    {chatMessage.userName !== cookies.userData.userName
-                      ? chatMessage.userName
-                      : ""}
-                  </p>
+                  <Avatar
+                    sx={{
+                      bgcolor: "#3f51b5",
+                      width: "30px",
+                      height: "30px",
+                    }}
+                  >
+                    {chatMessage.userName.charAt(0).toUpperCase()}
+                  </Avatar>
                 </div>
-                <div className="MessageBody">{chatMessage.text}</div>
+                <div
+                  className={`Message ${
+                    chatMessage.userName !== cookies.userData.userName
+                      ? " left"
+                      : ""
+                  }`}
+                >
+                  <div className="userName">
+                    <p>
+                      {chatMessage.userName !== cookies.userData.userName
+                        ? chatMessage.userName
+                        : ""}
+                    </p>
+                  </div>
+                  <div className="MessageBody">{chatMessage.text}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        {/* Ensure this is always at the bottom of the chat */}
-        <div ref={divRef} id="target-div"></div>
-      </div>
-      {showScrollToBottomButton && (
-        <button className="scroll-to-bottom" onClick={scrollToBottom}>
-          <ExpandMoreIcon />
-        </button>
-      )}
-      <div className="InputContainer">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="MessageInput"
-          placeholder="Type a message..."
-        />
-        <div onClick={handleSendMessage}>
-          <SendIcon />
+          ))}
+          {/* Ensure this is always at the bottom of the chat */}
+          <div ref={divRef} id="target-div"></div>
         </div>
+        {showScrollToBottomButton && (
+          <button className="scroll-to-bottom" onClick={scrollToBottom}>
+            <ExpandMoreIcon />
+          </button>
+        )}
+        <div className="InputContainer">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="MessageInput"
+            placeholder="Type a message..."
+          />
+          <div onClick={handleSendMessage}>
+            <SendIcon />
+          </div>
+        </div>
+        {!isConnected && (
+          <div className="ConnectionStatus">Reconnecting...</div>
+        )}
       </div>
-
-      {!isConnected && <div className="ConnectionStatus">Reconnecting...</div>}
     </div>
   );
 };

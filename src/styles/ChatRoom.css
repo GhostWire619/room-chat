@@ -3,7 +3,6 @@
 .ChatRoom {
   width: 70vw;
   background-color: #0d0f0f;
-
   margin: 0;
   height: 90vh;
   font-family: "SUSE", sans-serif;
@@ -147,6 +146,7 @@ p {
   justify-content: space-between;
   align-items: center;
   max-width: 68vw;
+  flex-shrink: 0;
 }
 
 .MessageInput {
@@ -172,7 +172,7 @@ p {
   background-color: #0056b3;
 }
 
-.scroll-to-bottom {
+/* .scroll-to-bottom {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,8 +186,20 @@ p {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-}
+} */
 
-.scroll-to-bottom:hover {
+/* .scroll-to-bottom:hover {
   background-color: #0056b3;
+} */
+
+@media (max-width: 560px) {
+  .ChatRoom {
+    width: 70vw;
+    height: 100vh;
+    flex: 1 0 auto;
+  }
+  .MessageList {
+    min-height: 350px;
+    height: 87.4vh;
+  }
 }
