@@ -212,14 +212,3 @@ p {
     height: 100%;
   }
 }
-
-@media only screen and (orientation: landscape) {
-  .MessageList {
-    min-height: 200px;
-    height: 30vh;
-  }
-  .room-list {
-    min-height: 150px;
-    height: 30vh;
-  }
-}
