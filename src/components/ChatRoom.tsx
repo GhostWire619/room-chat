@@ -85,7 +85,9 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
 
       socket.on("receive_message", (data: Message) => {
         setChat((prevChat) => [...prevChat, data]);
-        console.log("rcvd a mssg from " + data.userName);
+        console.log(
+          "rcvd a mssg from " + data.userName + "in room" + cookies.roomTitle
+        );
         if (data.userName !== cookies.userData.userName) {
           sendNotification("New Message", {
             body: `${data.userName}: ${data.text}`,

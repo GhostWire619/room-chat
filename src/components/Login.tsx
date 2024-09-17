@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       setError("loading...");
-      await login(userName, password);
+      await login(userName.trim().toLowerCase(), password);
 
       setError("");
     } catch (err: any) {

@@ -20,7 +20,7 @@ const Register: React.FC<Prop> = ({ setisRegisterd }) => {
     try {
       setError("loading...");
       const response = await axios.post(`${API_URL}/auth/register`, {
-        userName,
+        userName: userName.trim().toLowerCase(),
         password,
       });
       setSuccess(response.data.msg);

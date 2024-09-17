@@ -57,7 +57,7 @@ const RoomDashboard: React.FC<Props> = ({ toggleChatRoom }) => {
         title: newRoomTitle.trim().toLowerCase(),
       });
       setNewRoomTitle("");
-      setCookie("roomTitle", newRoomTitle, { path: "/" });
+      setCookie("roomTitle", newRoomTitle.trim().toLowerCase(), { path: "/" });
       toggleChatRoom();
       setError("");
     } catch (error) {
