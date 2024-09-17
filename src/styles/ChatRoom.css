@@ -172,7 +172,7 @@ p {
   background-color: #0056b3;
 }
 
-/* .scroll-to-bottom {
+.scroll-to-bottom {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,11 +186,11 @@ p {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-} */
+}
 
-/* .scroll-to-bottom:hover {
+.scroll-to-bottom:hover {
   background-color: #0056b3;
-} */
+}
 
 @media (max-width: 560px) {
   .ChatRoom {
