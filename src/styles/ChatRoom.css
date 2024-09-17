@@ -205,4 +205,10 @@ p {
   .App {
     margin-top: 45px;
   }
+  .room-list {
+    height: 70vh;
+  }
+  .room-dashboard {
+    height: 100%;
+  }
 }
