@@ -202,4 +202,7 @@ p {
     min-height: 350px;
     height: 80vh;
   }
+  .App {
+    margin-top: 40px;
+  }
 }
