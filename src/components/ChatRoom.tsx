@@ -42,9 +42,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
   useEffect(() => {
     // Load messages on mount
     disconnectReceiveMessage();
-    disconnectReceiveMessage();
-    disconnectReceiveMessage();
-    disconnectReceiveMessage();
     const loadMessages = async () => {
       if (cookies.roomTitle) {
         try {
@@ -60,16 +57,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
         }
       }
     };
-
     loadMessages();
-
-    return () => {
-      if (socketRef.current && cookies.roomTitle)
-        socketRef.current.emit("leave", {
-          userName: cookies.userData.userName,
-          room,
-        });
-    };
   }, [room]);
 
   useEffect(() => {
@@ -186,14 +174,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
 
   const setupSocketListeners = () => {
     if (socketRef.current) {
-      socketRef.current.on("receive_message", (data: Message) => {
-        setChat((prevChat) => [...prevChat, data]);
-        if (data.userName !== cookies.userData.userName) {
-          sendNotification("New Message", {
-            body: `${data.userName}: ${data.text}`,
-          });
-        }
-      });
+      // socketRef.current.on("receive_message", (data: Message) => {
+      //   setChat((prevChat) => [...prevChat, data]);
+      //   if (data.userName !== cookies.userData.userName) {
+      //     sendNotification("New Message", {
+      //       body: `${data.userName}: ${data.text}`,
+      //     });
+      //   }
+      // });
 
       socketRef.current.emit("join", {
         userName: cookies.userData.userName,
@@ -205,7 +193,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
   const disconnectReceiveMessage = () => {
     if (socketRef.current) {
       // Remove the event listener for "receive_message"
-      socketRef.current.off("receive_message");
+      // socketRef.current.off("receive_message");
 
       if (prevRoom) {
         socketRef.current.emit("leave", {
@@ -236,7 +224,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ room, setIsChatRoomVisible }) => {
           <IconButton
             onClick={() => {
               // setChat([]);
-              disconnectReceiveMessage();
               setIsChatRoomVisible(false);
             }}
             sx={{ color: "purple" }}
