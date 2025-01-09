@@ -27,39 +27,14 @@ interface Message {
 const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
   const [message, setMessage] = useState<string>("");
   const [chat, setChat] = useState<Message[]>([]);
-  // const [usersOnline, setUsersOnline] = useState<{ [key: string]: string }>({});
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  // const [prevRoom, setPrevRoom] = useState("");
-  const [showScrollToBottomButton, setShowScrollToBottomButton] =
-    useState(false);
+  const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
-  const { cookies, sendNotification, requestNotificationPermission, API_URL } =
-    useAuth();
+  const { cookies, sendNotification, requestNotificationPermission, API_URL } = useAuth();
 
-  useEffect(() => {
-    // Load messages on mount
-
-    const loadMessages = async () => {
-      if (cookies.roomTitle) {
-        // disconnectReceiveMessage();
-        try {
-          const response = await axios.post(`${API_URL}/auth/login/room`, {
-            title: cookies.roomTitle,
-          });
-          const { messages } = response.data;
-          setChat(messages);
-          // setPrevRoom(cookies.roomTitle);
-          setupSocketListeners();
-        } catch (error) {
-          console.error("Error loading messages:", error);
-        }
-      }
-    };
-    loadMessages();
-  }, [cookies.roomTitle]);
-
+  // Single useEffect for socket initialization and cleanup
   useEffect(() => {
     // Initialize socket connection
     socketRef.current = io(API_URL, {
@@ -74,99 +49,70 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
 
     const socket = socketRef.current;
 
-    // Setup socket listeners
-    const setupSocketListeners = () => {
-      // socket.on("user_status", (data: UserStatus) => {
-      //   // setUsersOnline((prevUsers) => ({
-      //   //   ...prevUsers,
-      //   //   [data.userName]: data.status,
-      //   // }));
-      // });
+    // Connection event handlers
+    socket.on("connect", () => {
+      console.log("Connected to socket server");
+      setIsConnected(true);
+      
+      // Join room after connection
+      if (cookies.roomTitle) {
+        socket.emit("join", {
+          userName: cookies.userData.userName,
+          room: cookies.roomTitle,
+        });
+        console.log("Joined room:", cookies.roomTitle);
+      }
+    });
 
-      socket.on("receive_message", (data: Message) => {
-        setChat((prevChat) => [...prevChat, data]);
-        console.log(
-          "rcvd a mssg from " + data.userName + "in room" + cookies.roomTitle
-        );
-        if (data.userName !== cookies.userData.userName) {
-          sendNotification("New Message", {
-            body: `${data.userName}: ${data.text}`,
+    socket.on("disconnect", () => {
+      console.log("Disconnected from socket server");
+      setIsConnected(false);
+    });
+
+    // Message handling
+    socket.on("receive_message", (data: Message) => {
+      console.log("Received message:", data);
+      setChat(prevChat => [...prevChat, data]);
+      
+      if (data.userName !== cookies.userData.userName) {
+        sendNotification("New Message", {
+          body: `${data.userName}: ${data.text}`,
+        });
+      }
+    });
+
+    // Load initial messages
+    const loadMessages = async () => {
+      if (cookies.roomTitle) {
+        try {
+          const response = await axios.post(`${API_URL}/auth/login/room`, {
+            title: cookies.roomTitle,
           });
+          setChat(response.data.messages);
+        } catch (error) {
+          console.error("Error loading messages:", error);
         }
-      });
-
-      socket.on("connect", () => {
-        console.log("Connected to socket server");
-        socket.emit("user_connected", { userName: cookies.userData.userName });
-        setIsConnected(true);
-      });
-
-      socket.on("disconnect", () => {
-        console.log("Disconnected from socket server");
-        setIsConnected(false);
-      });
-
-      socket.on("reconnect", (attemptNumber) => {
-        console.log(`Reconnected after ${attemptNumber} attempts`);
-        setIsConnected(true);
-      });
-
-      socket.on("reconnect_failed", () => {
-        console.error("Reconnection failed after maximum attempts");
-      });
+      }
     };
+    loadMessages();
 
-    setupSocketListeners();
-    requestNotificationPermission();
-
+    // Cleanup function
     return () => {
-      socket.emit("leave", {
-        userName: cookies.userData.userName,
-        room: cookies.roomTitle,
-      });
-      socket.disconnect();
+      if (socket) {
+        socket.emit("leave", {
+          userName: cookies.userData.userName,
+          room: cookies.roomTitle,
+        });
+        socket.off("receive_message");
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.disconnect();
+      }
     };
-  }, []);
-
-  const scrollToBottom = () => {
-    if (divRef.current) {
-      divRef.current.scrollIntoView({ behavior: "smooth" });
-      setShowScrollToBottomButton(false);
-    }
-  };
-
-  useEffect(() => {
-    scrollToBottom(); // Scroll to bottom whenever chat updates
-  }, [chat]);
-
-  // useEffect(() => {
-  //   console.log("room title is :" + cookies.roomTitle);
-  //   if (cookies.roomTitle) {
-  //     setupSocketListeners();
-  //     console.log(cookies.roomTitle);
-  //   } // Scroll to bottom whenever chat updates
-  // }, [room, cookies.roomTitle]);
-
-  const handleScroll = () => {
-    if (chatContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } =
-        chatContainerRef.current;
-      setShowScrollToBottomButton(scrollHeight > scrollTop + clientHeight + 5);
-    }
-  };
-
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.addEventListener("scroll", handleScroll);
-
-      return () => {
-        chatContainerRef.current?.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, [chat]);
+  }, [cookies.roomTitle]); // Re-run when room changes
 
   const handleSendMessage = () => {
-    if (message.trim() && socketRef.current) {
+    if (message.trim() && socketRef.current && isConnected) {
       socketRef.current.emit("send_message", {
         userName: cookies.userData.userName,
         message,
@@ -175,42 +121,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ setIsChatRoomVisible }) => {
       setMessage("");
     }
   };
-
-  const setupSocketListeners = () => {
-    if (socketRef.current) {
-      // socketRef.current.on("receive_message", (data: Message) => {
-      //   setChat((prevChat) => [...prevChat, data]);
-      //   if (data.userName !== cookies.userData.userName) {
-      //     sendNotification("New Message", {
-      //       body: `${data.userName}: ${data.text}`,
-      //     });
-      //   }
-      // });
-
-      socketRef.current.emit("join", {
-        userName: cookies.userData.userName,
-        room: cookies.roomTitle,
-      });
-      console.log("joind room" + cookies.roomTitle);
-    }
-  };
-  // const disconnectReceiveMessage = () => {
-  //   if (socketRef.current) {
-  //     // Remove the event listener for "receive_message"
-  //     // socketRef.current.off("receive_message");
-
-  //     if (prevRoom) {
-  //       socketRef.current.emit("leave", {
-  //         userName: cookies.userData.userName,
-  //         room: prevRoom,
-  //       });
-  //       console.log("lft room" + prevRoom);
-  //     }
-
-  //     console.log("Stopped receiving messages.");
-  //   }
-  // };
-
   return (
     <div>
       <div className="ChatRoom">
