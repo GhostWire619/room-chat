@@ -5,6 +5,10 @@ import LoginPage from "./components/Login";
 import ChatRoom from "./components/ChatRoom";
 import "./App.css";
 import { useEffect, useState } from "react";
+import {
+  requestNotificationPermission,
+  listenForNotifications,
+} from "./Notification";
 
 const App: React.FC = () => {
   const { cookies } = useAuth();
@@ -19,6 +23,19 @@ const App: React.FC = () => {
       return () => window.removeEventListener("resize", handleResize);
     }
   }, [isChatRoomVisible, cookies.userData]);
+
+  useEffect(() => {
+    const setupNotifications = async () => {
+      const token = await requestNotificationPermission();
+      if (token) {
+        // Save the token to your server for future use
+        console.log("FCM Token:", token);
+      }
+      listenForNotifications();
+    };
+
+    setupNotifications();
+  }, []);
 
   if (!cookies.userData) {
     return <LoginPage />;
